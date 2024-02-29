@@ -16,8 +16,12 @@ class SaleFactory extends Factory
      */
     public function definition(): array
     {
+        $productIds = \App\Models\Product::factory(10)->create()->pluck('id')->toArray();
         return [
-            //
+            'id' => $this->faker->uuid,
+            'amount' => $this->faker->randomFloat(2, 10, 500),
+            'quantity' => $this->faker->numberBetween(1, 10),
+            'product_id' => $this->faker->randomElement($productIds),
         ];
     }
 }
