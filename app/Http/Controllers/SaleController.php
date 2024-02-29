@@ -5,54 +5,34 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Requests\UpdateSaleRequest;
 use App\Models\Sale;
+use App\Services\SaleService;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $saleService;
+
+    public function __construct(SaleService $saleService)
     {
-        $sales = Sale::where('cancel', false)->with('productSales.product')->get();
-
-        $payload = $sales->map(function ($sale) {
-            return [
-                'sales_id' => $sale->id,
-                'amount' => $sale->amount,
-                'products' => $sale->productSales->map(function ($productSale) {
-                    return [
-                        'product_id' => $productSale->product_id,
-                        'name' => $productSale->product->name,
-                        'price' => $productSale->product->price,
-                        'amount' => $productSale->amount
-                    ];
-                })
-            ];
-        });
-
-        return response()->json($payload, 200);
+        $this->saleService = $saleService;
+    }
+    public function index():JsonResponse
+    {
+        try {
+            $products = $this->saleService->getAllSales();
+            return response()->json($products, 200);
+        } catch (Exception $e) {
+            return response()->json(['errors' => ['main' => $e->getMessage()]], 500);
+        }
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSaleRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Sale $sale)
     {
         //
