@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->decimal('amount', 10, 2);
-            $table->unsignedBigInteger('product_id');
-            $table->integer('quantity');
+            $table->boolean('cancel')->default(false);
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 

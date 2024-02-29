@@ -12,10 +12,7 @@ class Sale extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['id', 'amount', 'quantity','product_id'];
+    protected $fillable = ['id', 'amount', 'cancel'];
 
-    public function products()
-    {
-        return $this->belongsToMany(Product::class);
-    }
+
 }
