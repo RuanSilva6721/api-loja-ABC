@@ -19,8 +19,21 @@ class ProductController extends Controller
     {
         $this->productService = $productService;
     }
-    
-    public function index():JsonResponse
+    /**
+     * Display a listing of the resource.
+     * @OA\Get(
+     *      path="/api/products",
+     *      operationId="getAllProducts",
+     *      tags={"products"},
+     *      summary="Buscar a lista de produtos",
+     *      description="Retorna a lista de produtos em formato json",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation"
+     *      ),
+     * )
+     */
+    public function getAllProducts():JsonResponse
     { 
         try {
             $products = $this->productService->getAllProducts();

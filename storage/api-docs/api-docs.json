@@ -1,0 +1,218 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Adoorei Teste",
+        "description": "Criando uma API rest, A Loja ABC LTDA, vende produtos",
+        "contact": {
+            "name": "Ruan Silva",
+            "email": "ruansilva6721@gmail.com"
+        },
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Buscar a lista de produtos",
+                "description": "Retorna a lista de produtos em formato json",
+                "operationId": "getAllProducts",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/sales": {
+            "get": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Buscar lista de vendas",
+                "description": "Retorna a lista de vendas em formato json",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/sales/{id}": {
+            "get": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Display a specific sale",
+                "description": "Displays the details of a specific sale identified by the provided ID",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the sale to be displayed",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Not Found. Indicates that the specified sale was not found."
+                    },
+                    "500": {
+                        "description": "Internal Server Error. Indicates an unexpected error occurred."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Cancel a specific sale",
+                "description": "Cancels the sale identified by the provided ID",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the sale to be canceled",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content. Indicates that the sale was successfully canceled."
+                    },
+                    "404": {
+                        "description": "Not Found. Indicates that the specified sale was not found."
+                    },
+                    "500": {
+                        "description": "Internal Server Error. Indicates an unexpected error occurred."
+                    }
+                }
+            }
+        },
+        "/api/sales/{id}/add-product": {
+            "post": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Add a product to a sale",
+                "description": "Adds a product to the sale identified by the provided ID",
+                "operationId": "addProductForSale",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the sale to which the product will be added",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Product data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "products"
+                                ],
+                                "properties": {
+                                    "products": {
+                                        "description": "List of products to be added",
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "id",
+                                                "quantity"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Product ID",
+                                                    "type": "integer"
+                                                },
+                                                "quantity": {
+                                                    "description": "Product quantity",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request. Indicates a problem with the request body."
+                    },
+                    "404": {
+                        "description": "Not Found. Indicates that the specified sale was not found."
+                    },
+                    "500": {
+                        "description": "Internal Server Error. Indicates an unexpected error occurred."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Sale": {
+                "title": "Sale",
+                "description": "Sale model",
+                "properties": {
+                    "id": {
+                        "description": "ID da venda",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "amount": {
+                        "description": "Quantidade da venda",
+                        "type": "integer"
+                    },
+                    "products": {
+                        "description": "Lista de produtos",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "ID do produto",
+                                    "type": "integer"
+                                },
+                                "quantity": {
+                                    "description": "Quantidade do produto",
+                                    "type": "integer"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

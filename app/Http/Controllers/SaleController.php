@@ -55,7 +55,20 @@ class SaleController extends Controller
             'id.exists' => 'O ID do produto não é válido.',
         ])->validate();
     }
-
+    /**
+         * Display a listing of the resource.
+         * @OA\Get(
+         *      path="/api/sales",
+         *      operationId="index",
+         *      tags={"Sales"},
+         *      summary="Buscar lista de vendas",
+         *      description="Retorna a lista de vendas em formato json",
+         *      @OA\Response(
+         *          response=200,
+         *          description="Successful operation"
+         *      ),
+         * )
+         */
     public function index(): JsonResponse
     {
         try {
@@ -65,7 +78,34 @@ class SaleController extends Controller
             return response()->json(['errors' => ['main' => $e->getMessage()]], 500);
         }
     }
-
+    /**
+ * @OA\Schema(
+ *     schema="Sale",
+ *     title="Sale",
+ *     description="Sale model",
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
+ *         description="ID da venda"
+ *     ),
+ *     @OA\Property(
+ *         property="amount",
+ *         type="integer",
+ *         description="Quantidade da venda"
+ *     ),
+ *     @OA\Property(
+ *         property="products",
+ *         type="array",
+ *         description="Lista de produtos",
+ *         @OA\Items(
+ *             type="object",
+ *             @OA\Property(property="id", type="integer", description="ID do produto"),
+ *             @OA\Property(property="quantity", type="integer", description="Quantidade do produto")
+ *         )
+ *     )
+ * )
+ */
     public function store(Request $request): JsonResponse
     {
         $request->validate($this->rules, $this->messages);
@@ -78,6 +118,39 @@ class SaleController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @OA\Get(
+     *      path="/api/sales/{id}",
+     *      operationId="show",
+     *      tags={"Sales"},
+     *      summary="Display a specific sale",
+     *      description="Displays the details of a specific sale identified by the provided ID",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID of the sale to be displayed",
+     *          @OA\Schema(
+     *              type="string",
+     *              format="uuid"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not Found. Indicates that the specified sale was not found."
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error. Indicates an unexpected error occurred."
+     *      )
+     * )
+     */
     public function show(Request $request, $id): JsonResponse
     {
         $this->validateSaleId($id);
@@ -89,6 +162,39 @@ class SaleController extends Controller
             return response()->json(['errors' => ['main' => $e->getMessage()]], 500);
         }
     }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @OA\Delete(
+     *      path="/api/sales/{id}",
+     *      operationId="destroy",
+     *      tags={"Sales"},
+     *      summary="Cancel a specific sale",
+     *      description="Cancels the sale identified by the provided ID",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID of the sale to be canceled",
+     *          @OA\Schema(
+     *              type="string",
+     *              format="uuid"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=204,
+     *          description="No Content. Indicates that the sale was successfully canceled."
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not Found. Indicates that the specified sale was not found."
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error. Indicates an unexpected error occurred."
+     *      )
+     * )
+     */
 
     public function destroy(Request $request, string $id): JsonResponse
     {
@@ -101,6 +207,60 @@ class SaleController extends Controller
             return response()->json(['errors' => ['main' => $e->getMessage()]], 500);
         }
     }
+    /**
+     * Add a product to a specific sale.
+     *
+     * @OA\Post(
+     *      path="/api/sales/{id}/add-product",
+     *      operationId="addProductForSale",
+     *      tags={"Sales"},
+     *      summary="Add a product to a sale",
+     *      description="Adds a product to the sale identified by the provided ID",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID of the sale to which the product will be added",
+     *          @OA\Schema(
+     *              type="string",
+     *              format="uuid"
+     *          )
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Product data",
+     *          @OA\JsonContent(
+     *              required={"products"},
+     *              @OA\Property(
+     *                  property="products",
+     *                  type="array",
+     *                  description="List of products to be added",
+     *                  @OA\Items(
+     *                      required={"id", "quantity"},
+     *                      @OA\Property(property="id", type="integer", description="Product ID"),
+     *                      @OA\Property(property="quantity", type="integer", description="Product quantity")
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation"
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request. Indicates a problem with the request body."
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not Found. Indicates that the specified sale was not found."
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error. Indicates an unexpected error occurred."
+     *      )
+     * )
+     */
 
     public function addProductForSale(Request $request, $id): JsonResponse
     {
