@@ -1,0 +1,33 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9004:9003  
+    volumes:
+      - type: bind
+        source: .  
+        target: /var/www/html  
+    depends_on:
+      - db
+    networks: 
+      - my_network
+  db:
+    image: postgres
+    ports:
+      - 5433:5432 
+    environment:
+      - POSTGRES_USER=RuanFelipe
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=tb_loja_ABC
+    volumes:
+      - ./pg_hba.conf:/etc/postgresql/13/main/pg_hba.conf
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:  
+      - my_network
+
+networks:  
+  my_network:
+    driver: bridge

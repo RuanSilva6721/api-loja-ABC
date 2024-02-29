@@ -1,0 +1,5 @@
+CREATE USER "RuanFelipe" WITH PASSWORD 'password';
+
+CREATE DATABASE tb_loja_ABC;
+GRANT ALL PRIVILEGES ON DATABASE tb_loja_ABC TO "RuanFelipe";
+
