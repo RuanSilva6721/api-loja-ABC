@@ -27,12 +27,11 @@ class SaleControllerTest extends TestCase
         $product1 = Product::factory()->create();
         $product2 = Product::factory()->create();
 
-       
         $data = [
             'amount' => 12,
             'products' => [
-                ['id' => $product1->id],
-                ['id' => $product2->id],
+                ['id' => $product1->id, 'quantity' => 2],
+                ['id' => $product2->id, 'quantity' => 1],
             ],
         ];
 
@@ -40,9 +39,10 @@ class SaleControllerTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJson([
-                'success' => true,
+                'message' => 'Venda criada com sucesso',
             ]);
     }
+
 
     public function test_can_show_sale()
     {

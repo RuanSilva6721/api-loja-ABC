@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class Sale extends Model
 {
@@ -16,6 +17,14 @@ class Sale extends Model
     public function productSales()
     {
         return $this->hasMany(ProductSale::class, 'sales_id');
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Uuid::uuid4()->toString();
+        });
     }
 
 

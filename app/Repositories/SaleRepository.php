@@ -1,8 +1,11 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Product;
+use App\Models\ProductSale;
 use App\Models\Sale;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class SaleRepository
 {
@@ -25,5 +28,23 @@ class SaleRepository
             ];
         });
         return $payload;
+    }
+    public function createSale(object $request): Sale
+    {
+        $sale = new Sale();
+            $sale->amount = $request->amount;
+            $sale->cancel = false; 
+            $sale->save();
+
+            foreach ($request->products as $product) {
+                $productModel = Product::findOrFail($product['id']);
+
+                $productSale = new ProductSale();
+                $productSale->product_id = $product['id'];
+                $productSale->sales_id = $sale->id;
+                $productSale->quantity = $product['quantity'];
+                $productSale->save();
+            }
+        return $sale;
     }
 }

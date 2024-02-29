@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Models\Sale;
 use App\Repositories\SaleRepository;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class SaleService
 {
@@ -15,5 +15,9 @@ class SaleService
     public function getAllSales(): Collection
     {
         return $this->SaleRepository->getAllSales();
+    }
+    public function createSale(object $request): Sale
+    {
+        return $this->SaleRepository->createSale($request);
     }
 }
