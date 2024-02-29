@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->decimal('amount', 10, 2);
+            $table->integer('amount');
             $table->boolean('cancel')->default(false);
             $table->timestamps();
 

@@ -13,6 +13,10 @@ class Sale extends Model
     public $incrementing = false;
 
     protected $fillable = ['id', 'amount', 'cancel'];
+    public function productSales()
+    {
+        return $this->hasMany(ProductSale::class, 'sales_id');
+    }
 
 
 }

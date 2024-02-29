@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('sales_id');
             $table->unsignedBigInteger('product_id');
+            $table->integer('amount');
         
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade'); 

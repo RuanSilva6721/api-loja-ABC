@@ -16,12 +16,13 @@ class ProductSaleFactory extends Factory
      */
     public function definition(): array
     {
-        $salesIds = \App\Models\Sale::factory(10)->create()->pluck('id')->toArray();
-        $productIds = \App\Models\Product::factory(10)->create()->pluck('id')->toArray();
+        $salesIds = \App\Models\Sale::pluck('id')->toArray();
+        $productIds = \App\Models\Product::pluck('id')->toArray();
     
         return [
             'sales_id' => $this->faker->randomElement($salesIds),
-            'product_id' => $this->faker->randomElement($productIds)
+            'product_id' => $this->faker->randomElement($productIds),
+            'amount' => $this->faker->randomFloat(1, 100)
         ];
     }
 }

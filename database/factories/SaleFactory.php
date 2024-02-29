@@ -18,7 +18,7 @@ class SaleFactory extends Factory
     {
         return [
             'id' => $this->faker->uuid,
-            'amount' => $this->faker->randomFloat(2, 10, 500),
+            'amount' => $this->faker->randomFloat(1, 5000),
         ];
     }
 }
