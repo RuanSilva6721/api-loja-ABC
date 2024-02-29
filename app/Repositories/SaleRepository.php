@@ -47,4 +47,32 @@ class SaleRepository
             }
         return $sale;
     }
+    public function getSaleByID(string $id): Object
+    {
+        $sales = Sale::where('cancel', false)->where('id', $id)->with('productSales.product')->get();
+
+        $payload = $sales->map(function ($sale) {
+            return [
+                'sales_id' => $sale->id,
+                'amount' => $sale->amount,
+                'products' => $sale->productSales->map(function ($productSale) {
+                    return [
+                        'product_id' => $productSale->product_id,
+                        'name' => $productSale->product->name,
+                        'price' => $productSale->product->price,
+                        'amount' => $productSale->quantity
+                    ];
+                })
+            ];
+        });
+        return $payload;
+    }
+    public function cancelSaleByID(string $id):void
+    {
+        $sale = Sale::where('cancel', false)->where('id', $id)->first();
+        $sale->cancel = true;
+        $sale->save();
+   
+    }
+    
 }

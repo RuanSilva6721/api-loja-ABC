@@ -11,6 +11,7 @@ use App\Services\SaleService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SaleController extends Controller
 {
@@ -51,7 +52,7 @@ class SaleController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(Request $request):JsonResponse
     {
         $request->validate($this->rules, $this->messages);
         try {
@@ -64,32 +65,40 @@ class SaleController extends Controller
 
     }
 
-    public function show(Sale $sale)
+    public function show(Request $request, $id): JsonResponse
     {
-        //
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|string|exists:sales,id',
+        ], [
+            'id.exists' => 'O ID da venda não é válido.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $sale = $this->saleService->getSaleByID($id);
+            return response()->json($sale, 200);
+        } catch (Exception $e) {
+            return response()->json(['errors' => ['main' => $e->getMessage()]], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Sale $sale)
+    public function destroy(Request $request, string $id): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSaleRequest $request, Sale $sale)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Sale $sale)
-    {
-        //
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|string|exists:sales,id',
+        ], [
+            'id.exists' => 'O ID da venda não é válido.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        try {
+            $this->saleService->cancelSaleByID($id);
+            return response()->json(['message' => 'Venda cancelada com sucesso'], 204);
+        } catch (Exception $e) {
+            return response()->json(['errors' => ['main' => $e->getMessage()]], 500);
+        }
     }
 }

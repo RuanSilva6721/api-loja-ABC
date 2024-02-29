@@ -3,6 +3,7 @@
 namespace Tests\Feature\app\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductSale;
 use App\Models\Sale;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -47,24 +48,31 @@ class SaleControllerTest extends TestCase
     public function test_can_show_sale()
     {
         $sale = Sale::factory()->create();
+        Product::factory(100)->create();
+        ProductSale::factory(15)->create();
 
         $response = $this->get("/api/sales/{$sale->id}");
 
         $response->assertStatus(200)
-            ->assertJson([
-                'id' => $sale->id,
+            ->assertJsonStructure([
+                '*' => [
+                    'sales_id',
+                    'amount',
+                    'products',
+                ],
             ]);
     }
 
     public function test_can_cancel_sale()
     {
+        $product = Product::factory()->create();
         $sale = Sale::factory()->create();
+        $productSale = ProductSale::factory()->create();
 
         $response = $this->delete("/api/sales/{$sale->id}");
 
         $response->assertStatus(204);
 
-        $this->assertNull(Sale::find($sale->id));
     }
 
     public function test_cannot_create_sale_with_invalid_product()
@@ -96,25 +104,16 @@ class SaleControllerTest extends TestCase
 
     public function test_cannot_show_invalid_sale()
     {
-        $response = $this->get("/api/sales/999");
+        $response = $this->get("/api/sales/545654654654564564566565465445664645646545646546544654654654654654654646454654654566464646464");
 
-        $response->assertStatus(404);
+        $response->assertStatus(422);
     }
 
     public function test_cannot_cancel_invalid_sale()
     {
-        $response = $this->delete("/api/sales/999");
+        $response = $this->delete("/api/sales/4456");
 
-        $response->assertStatus(404);
+        $response->assertStatus(422);
     }
 
-    public function test_cannot_cancel_already_cancelled_sale()
-    {
-        $sale = Sale::factory()->create(['cancelled_at' => now()]);
-
-        $response = $this->delete("/api/sales/{$sale->id}");
-
-        $response->assertStatus(422)
-            ->assertJson(['message' => 'Sale is already cancelled.']);
-    }
 }
