@@ -28,5 +28,9 @@ class SaleService
     {
         $this->SaleRepository->cancelSaleByID($id);
     }
+    public function addProductForSale(string $id, object $request): Object
+    {
+        return $this->SaleRepository->addProductForSale($id ,$request);
+    }
     
 }

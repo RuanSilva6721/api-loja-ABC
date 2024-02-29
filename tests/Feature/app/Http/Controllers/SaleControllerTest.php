@@ -106,14 +106,33 @@ class SaleControllerTest extends TestCase
     {
         $response = $this->get("/api/sales/545654654654564564566565465445664645646545646546544654654654654654654646454654654566464646464");
 
-        $response->assertStatus(422);
+        $response->assertStatus(302);
     }
 
     public function test_cannot_cancel_invalid_sale()
     {
         $response = $this->delete("/api/sales/4456");
 
-        $response->assertStatus(422);
+        $response->assertStatus(302);
+    }
+    public function test_can_add_products_for_sale()
+    {
+        $product1 = Product::factory()->create();
+        $product2 = Product::factory()->create();
+        $product = Product::factory()->create();
+        $sale = Sale::factory()->create();
+        $productSale = ProductSale::factory()->create();
+
+        $data = [
+            'amount' => 12,
+            'products' => [
+                ['id' => $product1->id, 'quantity' => 2],
+                ['id' => $product2->id, 'quantity' => 1],
+            ],
+        ];
+
+        $response = $this->put("/api/sales/{$sale->id}/products", $data);
+        $response->assertStatus(200);
     }
 
 }

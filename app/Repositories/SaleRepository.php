@@ -74,5 +74,25 @@ class SaleRepository
         $sale->save();
    
     }
+    public function addProductForSale(string $id, object $request): Object
+    {
+        $sales = Sale::where('id', $id)
+            ->where('cancel', false)
+            ->with('productSales.product')
+            ->firstOrFail();
+
+        foreach ($request->products as $product) {
+            $productData = Product::findOrFail($product['id']);
+            $sales->productSales()->create([
+                'product_id' => $product['id'],
+                'quantity' => $product['quantity'],
+                'price' => $productData->price,
+            ]);
+        }
+
+        $sales->save();
+        return $sales;
+    }
+    
     
 }
