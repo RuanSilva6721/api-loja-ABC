@@ -19,7 +19,7 @@ class SaleRepository
                         'product_id' => $productSale->product_id,
                         'name' => $productSale->product->name,
                         'price' => $productSale->product->price,
-                        'amount' => $productSale->amount
+                        'amount' => $productSale->quantity
                     ];
                 })
             ];

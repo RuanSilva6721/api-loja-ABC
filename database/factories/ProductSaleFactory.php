@@ -22,7 +22,7 @@ class ProductSaleFactory extends Factory
         return [
             'sales_id' => $this->faker->randomElement($salesIds),
             'product_id' => $this->faker->randomElement($productIds),
-            'amount' => $this->faker->randomFloat(1, 100)
+            'quantity' => $this->faker->randomFloat(1, 100)
         ];
     }
 }
