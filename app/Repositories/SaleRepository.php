@@ -1,13 +1,14 @@
 <?php
 namespace App\Repositories;
 
+use App\Interfaces\SaleRepositoryInterface;
 use App\Models\Product;
 use App\Models\ProductSale;
 use App\Models\Sale;
 use Illuminate\Support\Collection;
 use PhpParser\Node\Expr\Cast\Object_;
 
-class SaleRepository
+class SaleRepository implements SaleRepositoryInterface
 {
     public function getAllSales(): Collection
     {
