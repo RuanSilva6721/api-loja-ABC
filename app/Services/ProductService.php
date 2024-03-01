@@ -1,19 +1,20 @@
 <?php
 namespace App\Services;
 
+use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
-use App\Repositories\ProductRepository;
+
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductService
 {
-    protected $productRepository;
-    public function __construct(ProductRepository $productRepository)
+    protected $productRepositoryInterface;
+    public function __construct(ProductRepositoryInterface $productRepositoryInterface)
     {
-        $this->productRepository = $productRepository;
+        $this->productRepositoryInterface = $productRepositoryInterface;
     }
     public function getAllProducts(): Collection
     {
-        return $this->productRepository->getAllProducts();
+        return $this->productRepositoryInterface->getAllProducts();
     }
 }

@@ -1,36 +1,37 @@
 <?php
 namespace App\Services;
 
+use App\Interfaces\SaleRepositoryInterface;
 use App\Models\Sale;
-use App\Repositories\SaleRepository;
+
 use Illuminate\Support\Collection;
 
 class SaleService
 {
-    protected $SaleRepository;
-    public function __construct(SaleRepository $SaleRepository)
+    protected $saleRepositoryInterface;
+    public function __construct(SaleRepositoryInterface $saleRepositoryInterface)
     {
-        $this->SaleRepository = $SaleRepository;
+        $this->saleRepositoryInterface = $saleRepositoryInterface;
     }
     public function getAllSales(): Collection
     {
-        return $this->SaleRepository->getAllSales();
+        return $this->saleRepositoryInterface->getAllSales();
     }
     public function createSale(object $request): Sale
     {
-        return $this->SaleRepository->createSale($request);
+        return $this->saleRepositoryInterface->createSale($request);
     }
     public function getSaleByID(string $id): Object
     {
-        return $this->SaleRepository->getSaleByID($id);
+        return $this->saleRepositoryInterface->getSaleByID($id);
     }
     public function cancelSaleByID(string $id): void
     {
-        $this->SaleRepository->cancelSaleByID($id);
+        $this->saleRepositoryInterface->cancelSaleByID($id);
     }
     public function addProductForSale(string $id, object $request): Object
     {
-        return $this->SaleRepository->addProductForSale($id ,$request);
+        return $this->saleRepositoryInterface->addProductForSale($id ,$request);
     }
     
 }
